@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>bah-locations-service demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../paper-input/paper-input.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
+    <link rel="import" href="../bah-locations-service.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic bah-locations-service demo</h3>
+      <demo-snippet>
+        <template>
+          <bah-locations-service></bah-locations-service>
+        </template>
+      </demo-snippet>
+      <template is="dom-bind">
+        <paper-input
+          id="url"
+          value="{{url}}"
+          always-float-label
+          label="URL">
+        </paper-input>
+        <paper-input
+          id="token"
+          value="{{token}}"
+          always-float-label
+          label="Token">
+        </paper-input>
+        <paper-input
+          id="id"
+          value="{{id}}"
+          always-float-label
+          label="Site or Location ID">
+        </paper-input>
+        <bah-locations-service
+          id="locationsService"
+          token="{{token}}"
+          url="{{url}}">
+        </bah-locations-service>
+        <div>
+          <paper-button id="getLocations" raised>Get Locations</paper-button>
+          <paper-button id="getLocationById" raised>Get Location By ID</paper-button>
+          <paper-button id="getLocationsById" raised>Get Locations By Parent ID</paper-button>
+          <paper-button id="getLocationsBySiteId" raised>Get Locations By Site ID</paper-button>
+        </div>
+        <pre id="response">
+        </pre>
+        <script>
+          window.document.querySelector('#url').value = 'https://test-brilliant-apps-hub-metadata.run.aws-usw02-pr.ice.predix.io/api/v1/enterprise/assetLocation';
+
+          // Get Locations
+          window.document.querySelector('#getLocations').addEventListener('click', function () {
+            window.document.querySelector('#locationsService').getLocations().then(function(data) {
+              window.document.querySelector('#response').innerHTML = JSON.stringify(data, null, 4);
+            }, function (error) {
+              window.document.querySelector('#response').innerHTML = JSON.stringify(data, null, 4);
+            });
+          });
+
+          // Get Location By ID
+          window.document.querySelector('#getLocationById').addEventListener('click', function () {
+            window.document.querySelector('#locationsService').getLocation(window.document.querySelector('#id').value).then(function(data) {
+              window.document.querySelector('#response').innerHTML = JSON.stringify(data, null, 4);
+            }, function (error) {
+              window.document.querySelector('#response').innerHTML = JSON.stringify(data, null, 4);
+            });
+          });
+
+          // Get Locations By Parent ID
+          window.document.querySelector('#getLocationsById').addEventListener('click', function () {
+            window.document.querySelector('#locationsService').getLocationsByParentId(window.document.querySelector('#id').value).then(function(data) {
+              window.document.querySelector('#response').innerHTML = JSON.stringify(data, null, 4);
+            }, function (error) {
+              window.document.querySelector('#response').innerHTML = JSON.stringify(data, null, 4);
+            });
+          });
+
+          // Get Locations By Site ID
+          window.document.querySelector('#getLocationsBySiteId').addEventListener('click', function () {
+            window.document.querySelector('#locationsService').getLocationsBySiteId(window.document.querySelector('#id').value).then(function(data) {
+              window.document.querySelector('#response').innerHTML = JSON.stringify(data, null, 4);
+            }, function (error) {
+              window.document.querySelector('#response').innerHTML = JSON.stringify(data, null, 4);
+            });
+          });
+        </script>
+      </template>
+    </div>
+  </body>
+</html>

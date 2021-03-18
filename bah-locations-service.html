@@ -1,0 +1,120 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../bah-promise-utility/bah-promise-utility.html">
+
+<!--
+`bah-locations-service`
+Brilliant Apps Hub location service
+
+@demo demo/index.html 
+-->
+
+<dom-module id="bah-locations-service">
+  <template>
+      <bah-promise-utility id="promiseUtility" token="[[token]]"></bah-promise-utility>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'bah-locations-service',
+
+      properties: {
+        /** 
+         * API root of the Brilliant Apps Hub asset service.
+         * */
+        url: {
+          type: String,
+          value: 'hub/api/v1/enterprise/assetLocation'
+        },
+
+        /**
+         * UAA Bearer token with access to the Brilliant Apps Hub
+         * 
+         * Best practice: use a proxy server to inject tokens & Predix Zone ID
+         * */
+        token: {
+          type: String
+        }
+      },
+
+      /** 
+       * Get locations
+       * @return {Promise}
+       * */
+      getLocations: function () {
+        return this.$.promiseUtility.sendRequest({
+          url: this.url + '/filter=archived=false'
+        });
+      },
+
+      /** 
+       * Get location by location ID. 
+       * @param {String} id Location ID
+       * @return {Promise}
+       * */
+      getLocation: function (id) {
+        return this.$.promiseUtility.sendRequest({
+          url: this.url + '/filter=archived=false:id=' + id
+        });
+      },
+
+      /** 
+       * Get locations by parent location ID. 
+       * @param {String} id Parent Location ID
+       * @return {Promise}
+       * */
+      getLocationsByParentId: function (id) {
+        return this.$.promiseUtility.sendRequest({
+          url: this.url + '/filter=type=location:archived=false:parent=' + id + ':archived=false'
+        });
+      },
+
+      /** 
+       * Get locations by parent location ID. 
+       * @param {String} id Parent Location ID
+       * @return {Promise}
+       * */
+      getLocationsBySiteId: function (id) {
+        return this.$.promiseUtility.sendRequest({
+          url: this.url + '/filter=type=location:archived=false:siteId=' + id + ':archived=false'
+        });
+      },
+
+      /** 
+       * Get shifts by parent location ID. 
+       * @param {String} id Parent Location ID
+       * @return {Promise}
+       * */
+      getShiftsBySiteId: function (id) {
+        return this.$.promiseUtility.sendRequest({
+          url: this.url + '/' + id + '/shifts',
+          method: 'GET'
+        });
+      },
+
+      /** 
+       * Get shifts by parent location ID. 
+       * @param {String} id Parent Location ID
+       * @return {Promise}
+       * */
+      postShiftForSite: function (id, shift) {
+        return this.$.promiseUtility.sendRequest({
+          url: this.url + '/' + id + '/shifts',
+          method: 'POST',
+          body: shift
+        });
+      },
+      getUsers: function(locationId) {
+        return this.$.promiseUtility.sendRequest({
+          url: 'hub/api/v2/users/lessData',
+          method: 'GET'
+        });
+      }
+    });
+  </script>
+</dom-module>
